@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tokendock"
+version = "0.1.0"
+description = "Serving optimization lab for GQA, KV cache, and PagedAttention-style block KV management."
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+  "matplotlib>=3.8.0",
+  "numpy>=1.26.0",
+  "torch>=2.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.0.0",
+]
+
+[project.scripts]
+tokendock = "tokendock.__main__:main"
+
+[tool.setuptools]
+packages = ["tokendock"]
