@@ -1,0 +1,121 @@
+{
+  "system": {
+    "device": "mps",
+    "hardware_note": "Apple Silicon / MPS if available, else CPU"
+  },
+  "model": {
+    "vocab_size": 260,
+    "hidden_size": 256,
+    "num_hidden_layers": 6,
+    "num_attention_heads": 8,
+    "num_key_value_heads": 2,
+    "intermediate_size": 768,
+    "max_seq_len": 1024
+  },
+  "workload": {
+    "num_sessions": 4,
+    "turns_per_session": [
+      7,
+      7,
+      7,
+      7
+    ],
+    "max_new_tokens": 16,
+    "warmup_runs": 1,
+    "measure_runs": 3,
+    "block_size": 16,
+    "sessions": [
+      [
+        "System: You are a routing assistant for aquarium observations. Keep every prior detail about water current, feeding noise, light changes, visitor movement, glass reflections, and maintenance events in working memory before answering the next question.",
+        "User: Read this synthetic incident narrative carefully. During the last two hours the tank received food, then a vibration near the glass, then a brief shadow from the left side, then a stronger water current near the corner, then a quieter interval, then another small disturbance around the bubble wall. Keep this sequence in memory.",
+        "User: Extend the same context with a follow-up. Assume one observer noted that the fish changed direction three times, two fish stayed near the plant, one moved toward the top, and the filter noise increased slightly after the feeding event.",
+        "User: Add another turn. Suppose the room lights dimmed, a person approached the tank, and a small tap happened near the right side, while the current remained uneven between the heater and the bridge decoration.",
+        "User: Given the full running context, explain which signal should dominate routing if a new vibration arrives right after the shadow event.",
+        "User: Using all previous turns, identify the safest short operational response and explain the reason in one concise paragraph.",
+        "User: Now keep all prior turns in memory and decide whether the current, the shadow, or the tap is the primary trigger."
+      ],
+      [
+        "System: You are a concise support assistant. Preserve every prior constraint across turns and answer using the full running context.",
+        "User: Read this long synthetic project log. Team A owns ingestion, Team B owns storage, Team C owns evaluation, deadlines are staggered, and two blockers affect downstream latency and release readiness.",
+        "User: Extend the same log. Assume storage slipped, evaluation depends on storage, and release notes cannot finalize until both metrics and dashboards are regenerated.",
+        "User: Add another long turn. A PM asks for reprioritization after a reliability incident, a partial rollback, and a delayed dependency patch in the deployment pipeline.",
+        "User: Given all earlier turns, identify the highest-priority blocker.",
+        "User: Now summarize the likely schedule impact using all previous context.",
+        "User: Finally provide the shortest action memo that still reflects the entire conversation history."
+      ],
+      [
+        "System: You are a planner for multi-step operations. Keep all prior turns in memory.",
+        "User: Here is a long synthetic inventory log with recurring anomalies in shipment, storage temperature, packaging variance, dock delays, and repeated handoff failures between staging and dispatch.",
+        "User: Add another turn. Assume dock three had a delay, cold-chain compliance briefly degraded, and one package batch was rerouted twice before scan confirmation.",
+        "User: Extend the log. The warehouse manager noticed label mismatches, repeated pallet swaps, and a mismatch between sensor time and dispatch time.",
+        "User: Based on the full context so far, which anomaly matters most if cold-chain compliance becomes the top priority?",
+        "User: Re-evaluate the likely root cause after the packaging incident and dock delay are both included.",
+        "User: Produce a compact final response that still depends on the whole running context."
+      ],
+      [
+        "System: You are a concise analyst. Keep all previous turns in memory.",
+        "User: Read this long synthetic conversation history about retries, cache misses, rate limits, queueing delay, background compaction, and latency regressions across multiple windows.",
+        "User: Add detail. Assume cache warm-up completed, but queue depth rose before retry storms began and one downstream shard became imbalanced.",
+        "User: Extend again. A second shard shows intermittent misses, rate limiting tightens, and the control plane introduces backoff after an operator intervention.",
+        "User: Using all prior context, what is the most likely cause of the latency regression?",
+        "User: If the retry budget is cut in half, what symptom changes first?",
+        "User: Produce a compact final answer for an operations dashboard using the full multi-turn history."
+      ]
+    ]
+  },
+  "engines": {
+    "baseline_mha_no_cache": {
+      "mean_ttft_ms": 10.595,
+      "p95_ttft_ms": 21.886,
+      "mean_tokens_per_s": 121.781,
+      "mean_total_time_ms": 173.023,
+      "peak_kv_bytes": 0,
+      "samples": 84
+    },
+    "gqa_contiguous_cache": {
+      "mean_ttft_ms": 5.731,
+      "p95_ttft_ms": 9.014,
+      "mean_tokens_per_s": 190.646,
+      "mean_total_time_ms": 85.095,
+      "peak_kv_bytes": 6488064,
+      "samples": 84
+    },
+    "gqa_paged_cache": {
+      "mean_ttft_ms": 5.919,
+      "p95_ttft_ms": 8.592,
+      "mean_tokens_per_s": 183.285,
+      "mean_total_time_ms": 88.637,
+      "peak_kv_bytes": 5013504,
+      "samples": 84
+    }
+  },
+  "comparisons": {
+    "gqa_contiguous_vs_baseline": {
+      "ttft_improvement_pct": 45.908,
+      "tokens_per_s_improvement_pct": 56.548,
+      "total_time_improvement_pct": 50.819,
+      "peak_kv_bytes_reduction_pct": null
+    },
+    "gqa_paged_vs_baseline": {
+      "ttft_improvement_pct": 44.134,
+      "tokens_per_s_improvement_pct": 50.504,
+      "total_time_improvement_pct": 48.772,
+      "peak_kv_bytes_reduction_pct": null
+    },
+    "gqa_paged_vs_contiguous": {
+      "ttft_improvement_pct": -3.28,
+      "tokens_per_s_improvement_pct": -3.861,
+      "total_time_improvement_pct": -4.162,
+      "peak_kv_bytes_reduction_pct": 22.727
+    }
+  },
+  "conclusion": {
+    "summary": "Applying GQA plus KV cache and PagedAttention-style block KV management improved serving metrics. The optimized engines reduced TTFT and total latency while improving decode throughput; the paged variant also reduced peak KV memory pressure versus naive contiguous cache growth.",
+    "elapsed_wall_time_s": 41.65
+  },
+  "references": [
+    "https://arxiv.org/abs/2309.06180",
+    "https://vllm.ai/blog/vllm",
+    "https://arxiv.org/abs/2305.13245"
+  ]
+}

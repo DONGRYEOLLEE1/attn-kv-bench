@@ -1,0 +1,83 @@
+{
+  "system": {
+    "device": "mps",
+    "hardware_note": "Apple Silicon / MPS if available, else CPU"
+  },
+  "model": {
+    "vocab_size": 260,
+    "hidden_size": 256,
+    "num_hidden_layers": 6,
+    "num_attention_heads": 8,
+    "num_key_value_heads": 2,
+    "intermediate_size": 768,
+    "max_seq_len": 1024
+  },
+  "workload": {
+    "num_sessions": 4,
+    "turns_per_session": [
+      7,
+      7,
+      7,
+      7
+    ],
+    "max_new_tokens": 16,
+    "warmup_runs": 1,
+    "measure_runs": 3,
+    "block_size": 16
+  },
+  "engines": {
+    "baseline_mha_no_cache": {
+      "mean_ttft_ms": 9.951,
+      "p95_ttft_ms": 19.893,
+      "mean_tokens_per_s": 121.541,
+      "mean_total_time_ms": 166.923,
+      "peak_kv_bytes": 0,
+      "samples": 84
+    },
+    "gqa_contiguous_cache": {
+      "mean_ttft_ms": 5.973,
+      "p95_ttft_ms": 10.296,
+      "mean_tokens_per_s": 184.436,
+      "mean_total_time_ms": 88.176,
+      "peak_kv_bytes": 6488064,
+      "samples": 84
+    },
+    "gqa_paged_cache": {
+      "mean_ttft_ms": 6.124,
+      "p95_ttft_ms": 9.081,
+      "mean_tokens_per_s": 181.563,
+      "mean_total_time_ms": 89.829,
+      "peak_kv_bytes": 5013504,
+      "samples": 84
+    }
+  },
+  "comparisons": {
+    "gqa_contiguous_vs_baseline": {
+      "ttft_improvement_pct": 39.976,
+      "tokens_per_s_improvement_pct": 51.748,
+      "total_time_improvement_pct": 47.176,
+      "peak_kv_bytes_reduction_pct": null
+    },
+    "gqa_paged_vs_baseline": {
+      "ttft_improvement_pct": 38.458,
+      "tokens_per_s_improvement_pct": 49.384,
+      "total_time_improvement_pct": 46.185,
+      "peak_kv_bytes_reduction_pct": null
+    },
+    "gqa_paged_vs_contiguous": {
+      "ttft_improvement_pct": -2.528,
+      "tokens_per_s_improvement_pct": -1.558,
+      "total_time_improvement_pct": -1.875,
+      "peak_kv_bytes_reduction_pct": 22.727
+    }
+  },
+  "conclusion": {
+    "summary": "Applying GQA plus KV cache and PagedAttention-style block KV management improved serving metrics. The optimized engines reduced TTFT and total latency while improving decode throughput; the paged variant also reduced peak KV memory pressure versus naive contiguous cache growth.",
+    "elapsed_wall_time_s": 41.319
+  },
+  "references": [
+    "https://arxiv.org/abs/2309.06180",
+    "https://vllm.ai/blog/vllm",
+    "https://arxiv.org/abs/2305.13245"
+  ]
+}

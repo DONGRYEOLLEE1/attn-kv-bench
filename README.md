@@ -118,10 +118,10 @@ uv run src/plot_results.py
 
 ### 그림 1. 지연 시간과 처리량 비교
 
-![Latency and Throughput](docs/assets/latency_throughput.png)
+![Latency and Throughput](assets/latency_throughput.png)
 
 그림 파일:
-- [latency_throughput.png](/Users/drlee/workspace/dev/tokendock/docs/assets/latency_throughput.png)
+- [latency_throughput.png](/Users/drlee/workspace/dev/tokendock/assets/latency_throughput.png)
 
 해석:
 - 두 최적화 경로 모두 baseline보다 `TTFT`와 `end-to-end latency`가 낮다
@@ -130,10 +130,10 @@ uv run src/plot_results.py
 
 ### 그림 2. KV 메모리 사용량 비교
 
-![KV Memory](docs/assets/kv_memory.png)
+![KV Memory](assets/kv_memory.png)
 
 그림 파일:
-- [kv_memory.png](/Users/drlee/workspace/dev/tokendock/docs/assets/kv_memory.png)
+- [kv_memory.png](/Users/drlee/workspace/dev/tokendock/assets/kv_memory.png)
 
 해석:
 - contiguous cache 대비 paged/block cache가 peak KV bytes를 더 낮춘다
@@ -169,8 +169,8 @@ uv run src/plot_results.py
 - JSON:
   - [benchmark_results.json](/Users/drlee/workspace/dev/tokendock/results/benchmark_results.json)
 - PNG:
-  - [latency_throughput.png](/Users/drlee/workspace/dev/tokendock/docs/assets/latency_throughput.png)
-  - [kv_memory.png](/Users/drlee/workspace/dev/tokendock/docs/assets/kv_memory.png)
+  - [latency_throughput.png](/Users/drlee/workspace/dev/tokendock/assets/latency_throughput.png)
+  - [kv_memory.png](/Users/drlee/workspace/dev/tokendock/assets/kv_memory.png)
 
 ## 10. 참고 문헌
 
