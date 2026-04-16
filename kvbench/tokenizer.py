@@ -1,4 +1,4 @@
-"""A simple byte tokenizer for serving-only benchmarks."""
+"""Simple byte tokenizer for serving benchmarks."""
 
 from __future__ import annotations
 
@@ -21,4 +21,3 @@ class ByteTokenizer:
                 continue
             payload.append(token_id - self.offset)
         return bytes(payload).decode("utf-8", errors="ignore")
-

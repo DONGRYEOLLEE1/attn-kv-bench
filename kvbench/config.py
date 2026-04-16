@@ -1,4 +1,4 @@
-"""Configuration for TokenDock benchmarks."""
+"""Benchmark configuration."""
 
 from __future__ import annotations
 
@@ -15,6 +15,10 @@ class ModelConfig:
     intermediate_size: int = 768
     max_seq_len: int = 1024
     dropout: float = 0.0
+
+    # MLA parameters
+    kv_lora_rank: int = 48
+    v_head_dim: int = 32
 
     @property
     def head_dim(self) -> int:
@@ -36,4 +40,3 @@ class BenchmarkConfig:
 
     def to_dict(self):
         return asdict(self)
-

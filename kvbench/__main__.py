@@ -1,4 +1,4 @@
-"""CLI for TokenDock."""
+"""CLI entry point."""
 
 from __future__ import annotations
 
@@ -9,7 +9,7 @@ from .benchmark import run_benchmark
 
 
 def main():
-    parser = argparse.ArgumentParser(description="TokenDock benchmark CLI")
+    parser = argparse.ArgumentParser(description="attn-kv-bench: Attention & KV Cache Serving Benchmark")
     sub = parser.add_subparsers(dest="command")
     bench = sub.add_parser("benchmark", help="Run the serving benchmark")
     bench.add_argument("--output", default="results/benchmark_results.json")

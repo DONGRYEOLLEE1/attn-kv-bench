@@ -1,4 +1,4 @@
-"""Benchmark workload definitions."""
+"""Multi-turn benchmark workload definitions."""
 
 from __future__ import annotations
 
@@ -24,10 +24,7 @@ def multi_turn_workload():
     )
     return [
         [
-            long_a,
-            long_b,
-            long_c,
-            long_d,
+            long_a, long_b, long_c, long_d,
             "User: Given the full running context, explain which signal should dominate routing if a new vibration arrives right after the shadow event.",
             "User: Using all previous turns, identify the safest short operational response and explain the reason in one concise paragraph.",
             "User: Now keep all prior turns in memory and decide whether the current, the shadow, or the tap is the primary trigger.",

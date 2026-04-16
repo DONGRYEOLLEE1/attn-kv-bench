@@ -3,9 +3,9 @@ requires = ["setuptools>=68", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "tokendock"
-version = "0.1.0"
-description = "Serving optimization lab for GQA, KV cache, and PagedAttention-style block KV management."
+name = "attn-kv-bench"
+version = "0.2.0"
+description = "Benchmark for MHA, GQA, and MLA attention with KV cache strategies."
 readme = "README.md"
 requires-python = ">=3.9"
 dependencies = [
@@ -20,7 +20,7 @@ dev = [
 ]
 
 [project.scripts]
-tokendock = "tokendock.__main__:main"
+kvbench = "kvbench.__main__:main"
 
 [tool.setuptools]
-packages = ["tokendock"]
+packages = ["kvbench"]
